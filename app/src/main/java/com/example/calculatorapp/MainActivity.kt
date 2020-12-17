@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
     // Variable to hold the operand and type of calculation
 
     private var operand1: Double? = null
-    private var operand2: Double? = null
+    private var operand2: Double = 0.0
     private var pendingOperations = "="
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,9 +76,32 @@ class MainActivity : AppCompatActivity() {
         buttonMultiply.setOnClickListener(opListener)
         buttonMinus.setOnClickListener(opListener)
         buttonPlus.setOnClickListener(opListener)
+
     }
 
     private fun performOperation(value: String, operation: String) {
-        displayOperation.text = operation
+        if (operand1 == null) {
+            operand1 = value.toDouble()
+        } else {
+            operand2 = value.toDouble()
+
+            if (pendingOperations == "=") {
+                pendingOperations = operation
+            }
+
+            when (pendingOperations) {
+                "=" -> operand1 = operand2
+                "/" -> if (operand2 == 0.0) {
+                           operand1 = Double.NaN //handle attempt to devide by zero
+                    } else {
+                        operand1 = operand1!! / operand2
+                    }
+                "*" -> operand1 = operand1!! * operand2
+                "-" -> operand1 = operand1!! - operand2
+                "+" -> operand1 = operand1!! + operand2
+            }
+        }
+        result.setText(operand1.toString())
+        newNumber.setText("")
     }
 }
