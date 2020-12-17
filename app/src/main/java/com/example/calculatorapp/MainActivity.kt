@@ -10,7 +10,7 @@ import android.widget.TextView
 class MainActivity : AppCompatActivity() {
     private lateinit var result: EditText
     private lateinit var newNumber: EditText
-    private val displayOperatin by lazy(LazyThreadSafetyMode.NONE) { findViewById<TextView>(R.id.operation) }
+    private val displayOperation by lazy(LazyThreadSafetyMode.NONE) { findViewById<TextView>(R.id.operation) }
 
     // Variable to hold the operand and type of calculation
 
@@ -62,5 +62,23 @@ class MainActivity : AppCompatActivity() {
         button9.setOnClickListener(listener)
         buttonDot.setOnClickListener(listener)
 
+        val opListener = View.OnClickListener { v ->
+            val op = (v as Button).text.toString()
+            val value = newNumber.text.toString()
+            if (value.isNotEmpty()) {
+                performOperation(value, op)
+            }
+            pendingOperations = op
+            displayOperation.text = pendingOperations
+        }
+        buttonEquals.setOnClickListener(opListener)
+        buttonDivide.setOnClickListener(opListener)
+        buttonMultiply.setOnClickListener(opListener)
+        buttonMinus.setOnClickListener(opListener)
+        buttonPlus.setOnClickListener(opListener)
+    }
+
+    private fun performOperation(value: String, operation: String) {
+        displayOperation.text = operation
     }
 }
